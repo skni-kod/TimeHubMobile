@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timehubmobile/Store/notemodel.dart';
+import 'package:timehubmobile/Store/tasksModel.dart';
 
 class Note extends StatefulWidget {
   const Note({Key? key, required this.note, required this.id})
@@ -20,15 +20,15 @@ class _NoteState extends State<Note> {
   Widget build(BuildContext context) {
     textInputController.text = widget.note;
     return ChangeNotifierProvider(
-        create: (context) => NoteModel(),
+        create: (context) => TasksModel(),
         child: GestureDetector(
             onLongPress: (ModalRoute.of(context)?.settings.name == "/notes"
                 ? () {
-                    !Provider.of<NoteModel>(context, listen: false)
+                    !Provider.of<TasksModel>(context, listen: false)
                             .isInDelete(widget.id)
-                        ? Provider.of<NoteModel>(context, listen: false)
+                        ? Provider.of<TasksModel>(context, listen: false)
                             .addToDelete({"id": widget.id})
-                        : Provider.of<NoteModel>(context, listen: false)
+                        : Provider.of<TasksModel>(context, listen: false)
                             .removeFromDelete({"id": widget.id});
                   }
                 : () {}),
@@ -39,7 +39,7 @@ class _NoteState extends State<Note> {
                 ? Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                            color: Provider.of<NoteModel>(context)
+                            color: Provider.of<TasksModel>(context)
                                     .isInDelete(widget.id)
                                 ? Colors.green
                                 : Colors.blue)),
@@ -71,7 +71,7 @@ class _NoteState extends State<Note> {
                                   onPressed: () {
                                     FocusScope.of(context).unfocus();
                                     if (textInputController.text != "") {
-                                      Provider.of<NoteModel>(context,
+                                      Provider.of<TasksModel>(context,
                                               listen: false)
                                           .changeNote({
                                         "id": widget.id,
@@ -89,7 +89,7 @@ class _NoteState extends State<Note> {
                 : Container(
                     decoration: BoxDecoration(
                         border: Border.all(
-                            color: Provider.of<NoteModel>(context)
+                            color: Provider.of<TasksModel>(context)
                                     .isInDelete(widget.id)
                                 ? Colors.green
                                 : Colors.blue)),

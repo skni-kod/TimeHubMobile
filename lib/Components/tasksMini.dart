@@ -1,17 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:timehubmobile/Components/note.dart';
-import 'package:timehubmobile/Store/notemodel.dart';
+import 'package:timehubmobile/Store/tasksModel.dart';
 import 'package:provider/provider.dart';
 
-class NotesMini extends StatefulWidget {
-  const NotesMini({Key? key}) : super(key: key);
+class TasksMini extends StatefulWidget {
+  const TasksMini({Key? key}) : super(key: key);
 
   @override
-  State<NotesMini> createState() => _NotesMiniState();
+  State<TasksMini> createState() => _NotesMiniState();
 }
 
-class _NotesMiniState extends State<NotesMini> {
+class _NotesMiniState extends State<TasksMini> {
   @override
+  String getMonthName(month) {
+    switch (month) {
+      case 1:
+        return "Styczen";
+      case 2:
+        return "Luty";
+      case 3:
+        return "Marzec";
+      case 4:
+        return "Kwiecien";
+      case 5:
+        return "Maj";
+      case 6:
+        return "Czerwiec";
+      case 7:
+        return "Lipiec";
+      case 8:
+        return "Sierpień";
+      case 9:
+        return "Wrzesień";
+      case 10:
+        return "Październik";
+      case 11:
+        return "Listopad";
+      case 12:
+        return "Grudzień";
+      default:
+        return "Błędny miesiąc";
+    }
+  }
+
   Widget build(BuildContext context) {
     return Stack(
       children: [
@@ -30,16 +61,19 @@ class _NotesMiniState extends State<NotesMini> {
                               Border(bottom: BorderSide(color: Colors.blue))),
                       height: 50,
                       width: MediaQuery.of(context).size.width - 82,
-                      child: const Align(
+                      child: Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Notatki",
-                            style: TextStyle(color: Colors.blue),
+                            DateTime.now().day.toString() +
+                                " " +
+                                getMonthName(DateTime.now().month),
+                            style: const TextStyle(
+                                color: Colors.blue, fontSize: 18),
                           )))
                 ],
               ),
               Expanded(
-                child: Consumer<NoteModel>(
+                child: Consumer<TasksModel>(
                     builder: ((context, value, child) => ListView(
                           children: List.generate(
                               value.count,

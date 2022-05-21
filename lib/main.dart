@@ -3,12 +3,12 @@ import 'package:timehubmobile/calendar.dart';
 import 'package:timehubmobile/home.dart';
 import 'package:timehubmobile/notes.dart';
 import 'package:provider/provider.dart';
-import 'package:timehubmobile/Store/notemodel.dart';
+import 'package:timehubmobile/Store/tasksModel.dart';
 import 'package:flutter/services.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (context) => NoteModel())],
+    providers: [ChangeNotifierProvider(create: (context) => TasksModel())],
     child: const TimeHub(),
   ));
 }
@@ -18,7 +18,7 @@ class TimeHub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<NoteModel>(context, listen: false).readNotes();
+    Provider.of<TasksModel>(context, listen: false).readNotes();
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:timehubmobile/Components/note.dart';
-import 'package:timehubmobile/Store/notemodel.dart';
+import 'package:timehubmobile/Store/tasksModel.dart';
 import 'package:timehubmobile/Components/expandableFab.dart';
 
 class Notes extends StatefulWidget {
@@ -18,7 +18,7 @@ class _NotesState extends State<Notes> {
   void confirmNote() {
     FocusScope.of(context).unfocus();
     if (textInputController.text != "") {
-      Provider.of<NoteModel>(context, listen: false)
+      Provider.of<TasksModel>(context, listen: false)
           .addNote(textInputController.text);
       textInputController.clear();
       setState(() {
@@ -35,7 +35,7 @@ class _NotesState extends State<Notes> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: Consumer<NoteModel>(
+        floatingActionButton: Consumer<TasksModel>(
             builder: (context, value, child) => value.deleteItems.isNotEmpty
                 ? Stack(
                     children: [
@@ -44,7 +44,7 @@ class _NotesState extends State<Notes> {
                           margin: const EdgeInsets.only(right: 60),
                           child: ActionButton(
                             onPressed: () {
-                              Provider.of<NoteModel>(context, listen: false)
+                              Provider.of<TasksModel>(context, listen: false)
                                   .removeNotes();
                             },
                             icon: Icons.delete,
@@ -53,7 +53,7 @@ class _NotesState extends State<Notes> {
                           alignment: Alignment.bottomRight,
                           child: ActionButton(
                             onPressed: () =>
-                                Provider.of<NoteModel>(context, listen: false)
+                                Provider.of<TasksModel>(context, listen: false)
                                     .clearDelete(),
                             icon: Icons.close,
                           )),
@@ -68,7 +68,7 @@ class _NotesState extends State<Notes> {
                         icon: Icons.arrow_back,
                         onPressed: () => Navigator.pop(context),
                       )),
-        body: Consumer<NoteModel>(
+        body: Consumer<TasksModel>(
             builder: (context, value, child) => GestureDetector(
                 onTap: confirmNote,
                 child: Align(
@@ -116,7 +116,7 @@ class _NotesState extends State<Notes> {
                                         labelText: 'Dodaj notatkę',
                                         labelStyle: TextStyle(fontSize: 18))),
                                 Expanded(
-                                  child: Consumer<NoteModel>(
+                                  child: Consumer<TasksModel>(
                                       builder: ((context, value, child) =>
                                           ListView(
                                             children: List.generate(

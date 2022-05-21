@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 
-class NoteModel extends ChangeNotifier {
-  final List<Map> _list = [];
+class TasksModel extends ChangeNotifier {
+  final List<Map> _list = [{"id":1,"kanban":"Politechnika","kanban_id":1,"column":"to_do","column_id":1,"start":DateTime,"end":"10.00",}];
   final List<Map> _deleteList = [];
 
   int get count => _list.length;

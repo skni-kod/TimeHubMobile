@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:timehubmobile/Components/notesMini.dart';
+import 'package:timehubmobile/Components/tasksMini.dart';
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -150,7 +150,7 @@ class Home extends StatelessWidget {
                 ],
               ))
         ]),
-        NotesMini()
+        const TasksMini()
       ])),
     );
   }
