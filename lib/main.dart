@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:timehubmobile/calendar.dart';
 import 'package:timehubmobile/home.dart';
 import 'package:timehubmobile/notes.dart';
+import 'package:timehubmobile/logowanie.dart';
+import 'package:timehubmobile/rejestracja.dart';
 import 'package:provider/provider.dart';
 import 'package:timehubmobile/Store/tasksModel.dart';
+import 'package:timehubmobile/Store/userModel.dart';
 import 'package:flutter/services.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (context) => TasksModel())],
+    providers: [
+      //ChangeNotifierProvider<TasksModel>(create: (context) => TasksModel()),
+      ChangeNotifierProvider<ModelUzytkownika>(
+          create: (context) => ModelUzytkownika())
+    ],
     child: const TimeHub(),
   ));
 }
@@ -18,7 +25,7 @@ class TimeHub extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Provider.of<TasksModel>(context, listen: false).readNotes();
+    //Provider.of<TasksModel>(context, listen: false).readNotes();
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -26,15 +33,18 @@ class TimeHub extends StatelessWidget {
     ]);
 
     return MaterialApp(
-        title: 'TimeHub',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: "/",
-        routes: {
-          "/": (context) => const Home(),
-          "/notes": (context) => Notes(),
-          "/calendar": ((context) => Calendar())
-        });
+      title: 'TimeHub',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: "/",
+      routes: {
+        "/": (context) => Home(),
+        //"/notes": (context) => Notes(),
+        //"/calendar": ((context) => Calendar()),
+        "/logowanie": ((context) => const Logowanie()),
+        "/rejestracja": ((context) => const Rejestracja()),
+      },
+    );
   }
 }
