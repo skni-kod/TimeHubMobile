@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:timehubmobile/Components/tasksMini.dart';
 import 'package:provider/provider.dart';
+import 'package:timehubmobile/Components/tasksMini.dart';
+import 'package:timehubmobile/Store/tablicaModel.dart';
 import 'package:timehubmobile/Store/userModel.dart';
 
 class Home extends StatelessWidget {
@@ -119,7 +120,25 @@ class UzytkownikZalogowany {
                   color: Colors.blue,
                   constraints: const BoxConstraints(),
                   icon: const Icon(Icons.view_kanban, size: 40),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await Provider.of<ModelTablicy>(context, listen: false)
+                        .getTablica(context);
+                    if (Provider.of<ModelTablicy>(context, listen: false).ok) {
+                      for (int i = 0;
+                          i <
+                              Provider.of<ModelTablicy>(context, listen: false)
+                                  .tablice
+                                  .length;
+                          i++) {
+                        print((Provider.of<ModelTablicy>(context, listen: false)
+                            .tablice[i]
+                            .tytul));
+                      }
+                      Navigator.pushNamed(context, "/listaTablic");
+                    } else {
+                      print("error");
+                    }
+                  },
                 ),
               ),
               const SizedBox(
@@ -218,7 +237,7 @@ class UzytkownikZalogowany {
               ],
             ))
       ]),
-      const TasksMini()
+      // const TasksMini()
     ]));
   }
 }
