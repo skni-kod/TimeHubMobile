@@ -5,11 +5,11 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'dart:convert';
 import 'package:timehubmobile/Store/userModel.dart';
 
 class ModelTablicy extends ChangeNotifier {
-  late Tablica tablica = Tablica(tytul: '', czyZautomatyzowane: false);
   late List<Tablica> tablice;
   String bledy = "";
   bool ok = false;

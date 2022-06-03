@@ -1,5 +1,8 @@
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:timehubmobile/Store/kolumnaModel.dart';
+import 'package:timehubmobile/Store/tablicaModel.dart';
 import 'package:timehubmobile/listaTablic.dart';
 import 'package:timehubmobile/style.dart';
 import 'package:timehubmobile/test_list.dart';
@@ -18,8 +21,10 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   @override
   void initState() {
     super.initState();
-
-    lists = allLists.map(buildList).toList();
+    lists = Provider.of<ModelKolumny>(context, listen: false)
+        .kolumny
+        .map(buildList)
+        .toList();
   }
 
   @override
@@ -27,7 +32,7 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     return Scaffold(
         appBar: AppBar(
-          title: Text("Tablica ${args.id}: ${args.title}"),
+          title: Text("Tablica ${args.index}: ${args.title}"),
         ),
         body: DragAndDropLists(
           axis: Axis.horizontal,
@@ -120,25 +125,25 @@ class DraggableListItem {
   });
 }
 
-DragAndDropList buildList(DraggableList list) => DragAndDropList(
+DragAndDropList buildList(Kolumna kolumna) => DragAndDropList(
       header: Container(
         padding: EdgeInsets.all(8),
         child: Text(
-          list.header,
+          kolumna.tytul,
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
         ),
       ),
-      children: list.items
-          .map((item) => DragAndDropItem(
-                child: ListTile(
-                  leading: Image.network(
-                    item.urlImage,
-                    width: 40,
-                    height: 40,
-                    //fit: BoxFit.cover,
-                  ),
-                  title: Text(item.title),
-                ),
-              ))
-          .toList(),
+      children: [
+        DragAndDropItem(
+          child: ListTile(
+            leading: Image.network(
+              'http://ogrodnictwo.expert/wp-content/uploads/2016/09/Fotolia_57641864_Subscription_Monthly_XL-800x500_c.jpg',
+              width: 40,
+              height: 40,
+              //fit: BoxFit.cover,
+            ),
+            title: Text('1'),
+          ),
+        )
+      ],
     );

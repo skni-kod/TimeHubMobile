@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'package:timehubmobile/Store/tablicaModel.dart';
 import 'package:timehubmobile/calendar.dart';
 import 'package:timehubmobile/home.dart';
@@ -18,7 +19,8 @@ void main() {
       //ChangeNotifierProvider<TasksModel>(create: (context) => TasksModel()),
       ChangeNotifierProvider<ModelUzytkownika>(
           create: (context) => ModelUzytkownika()),
-      ChangeNotifierProvider<ModelTablicy>(create: (context) => ModelTablicy())
+      ChangeNotifierProvider<ModelTablicy>(create: (context) => ModelTablicy()),
+      ChangeNotifierProvider<ModelKolumny>(create: (context) => ModelKolumny())
     ],
     child: const TimeHub(),
   ));

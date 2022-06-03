@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'package:timehubmobile/Store/tablicaModel.dart';
 import 'package:timehubmobile/style.dart';
 import 'package:timehubmobile/widokTablicy.dart';
@@ -30,11 +31,13 @@ class _StanListyTablic extends State<ListaTablic> {
             Provider.of<ModelTablicy>(context, listen: false).tablice.length,
             (index) {
           return InkWell(
-            onTap: () {
+            onTap: () async {
               debugPrint("Tablica $index pressed");
+              await Provider.of<ModelKolumny>(context, listen: false)
+                  .getKolumny(context, index);
               Navigator.pushNamed(context, "/widokTablicy",
                   arguments: ScreenArguments(
-                      index + 1,
+                      index,
                       Provider.of<ModelTablicy>(context, listen: false)
                           .tablice[index]
                           .tytul
@@ -99,8 +102,8 @@ Widget buildDodajTabliceButton(BuildContext context) => IconButton(
     });
 
 class ScreenArguments {
-  final int id;
+  final int index;
   final String title;
 
-  ScreenArguments(this.id, this.title);
+  ScreenArguments(this.index, this.title);
 }
