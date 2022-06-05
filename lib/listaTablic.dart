@@ -30,10 +30,11 @@ class _StanListyTablic extends State<ListaTablic> {
         children: List.generate(
             Provider.of<ModelTablicy>(context, listen: false).tablice.length,
             (index) {
+          print('tablice wygenerowane');
           return InkWell(
             onTap: () async {
               debugPrint("Tablica $index pressed");
-              await Provider.of<ModelKolumny>(context, listen: false)
+              await Provider.of<ModelTablicy>(context, listen: false)
                   .getKolumny(context, index);
               Navigator.pushNamed(context, "/widokTablicy",
                   arguments: ScreenArguments(
@@ -89,17 +90,76 @@ class _StanListyTablic extends State<ListaTablic> {
       ),
     );
   }
-}
 
-Widget buildDodajTabliceButton(BuildContext context) => IconButton(
-    icon: Icon(
-      Icons.add,
-    ),
-    splashRadius: 25,
-    splashColor: Color.fromARGB(255, 54, 136, 202),
-    onPressed: () {
-      debugPrint("Dodaj_tablice_button_pressed");
-    });
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  Future<void> pokazOkno(BuildContext context) async {
+    return await showDialog(
+        context: context,
+        builder: (context) {
+          final TextEditingController _edycjaTekstuController =
+              TextEditingController();
+          bool isChecked = false;
+          return StatefulBuilder(builder: (context, setState) {
+            return AlertDialog(
+              content: Form(
+                key: _formKey,
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  TextFormField(
+                    controller: _edycjaTekstuController,
+                    validator: (value) {
+                      return value!.isNotEmpty ? null : "Nie poprawna wartośc";
+                    },
+                    decoration:
+                        InputDecoration(hintText: 'Wpisz nazwę tablicy'),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Czy zautomatyzowana"),
+                      Checkbox(
+                          value: isChecked,
+                          onChanged: (checked) {
+                            setState(() {
+                              isChecked = checked!;
+                            });
+                          })
+                    ],
+                  )
+                ]),
+              ),
+              actions: [
+                TextButton(
+                    child: Text("Stwórz"),
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await Provider.of<ModelTablicy>(context, listen: false)
+                            .dodajTablice(_edycjaTekstuController.text,
+                                isChecked ? 'true' : 'false', context);
+
+                        Navigator.of(context).pop();
+                      }
+                    })
+              ],
+            );
+          });
+        });
+  }
+
+  Widget buildDodajTabliceButton(BuildContext context) => IconButton(
+      icon: Icon(
+        Icons.add,
+      ),
+      splashRadius: 25,
+      splashColor: Color.fromARGB(255, 54, 136, 202),
+      onPressed: () async {
+        debugPrint('Dodaj tablice clicked');
+        await pokazOkno(context);
+        setState(() {
+          Provider.of<ModelTablicy>(context, listen: false).getTablica(context);
+        });
+      });
+}
 
 class ScreenArguments {
   final int index;

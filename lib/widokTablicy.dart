@@ -1,3 +1,4 @@
+import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   @override
   void initState() {
     super.initState();
-    lists = Provider.of<ModelKolumny>(context, listen: false)
+    lists = Provider.of<ModelTablicy>(context, listen: false)
         .kolumny
         .map(buildList)
         .toList();
@@ -31,22 +32,30 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Tablica ${args.index}: ${args.title}"),
-        ),
-        body: DragAndDropLists(
+      appBar: AppBar(
+        title: Text("Tablica ${args.index}: ${args.title}"),
+      ),
+      body: Column(children: [
+        Expanded(
+            child: DragAndDropLists(
           axis: Axis.horizontal,
           listWidth: MediaQuery.of(context).size.width * 0.6,
-          listPadding: EdgeInsets.all(16),
+          listPadding: EdgeInsets.all(8),
           listDraggingWidth: 150,
           listInnerDecoration: BoxDecoration(
               color: Color.fromARGB(122, 70, 184, 250),
               borderRadius: BorderRadius.circular(10)),
           children: lists,
           itemDecorationWhileDragging: const BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(color: Color.fromARGB(31, 223, 47, 47), blurRadius: 4)
+            color: Colors.grey,
+            borderRadius: BorderRadius.all(Radius.circular(7.0)),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: Colors.black45,
+                spreadRadius: 3.0,
+                blurRadius: 6.0,
+                offset: Offset(2, 3),
+              ),
             ],
           ),
           itemDivider: const Divider(
@@ -56,9 +65,47 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
           ),
           onItemReorder: onReorderListItem,
           onListReorder: onReorderList,
+          onItemAdd: onItemAdd,
+          onListAdd: onListAdd,
           itemDragHandle: buildDragHandle(),
           listDragHandle: buildDragHandle(isList: true),
-        ));
+        )),
+        SizedBox(
+          height: 40,
+          child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Expanded(
+                  child: Container(
+                    color: Colors.pink,
+                    child: Center(
+                      child: Draggable<DragAndDropListInterface>(
+                        feedback: Icon(Icons.add_box),
+                        child: Icon(Icons.add_box),
+                        data: DragAndDropList(
+                          header: Text(
+                            'New default list',
+                          ),
+                          children: <DragAndDropItem>[],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                    child: Container(
+                        color: Colors.orange,
+                        child: Center(
+                            child: Draggable<DragAndDropItem>(
+                          feedback: Icon(Icons.add_comment),
+                          child: Icon(Icons.add_comment),
+                          data:
+                              DragAndDropItem(child: Text('New default item')),
+                        ))))
+              ]),
+        )
+      ]),
+    );
   }
 
   DragHandle buildDragHandle({bool isList = false}) {
@@ -103,6 +150,97 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
       lists.insert(newListIndex, movedList);
     });
   }
+
+  onItemAdd(DragAndDropItem newItem, int listIndex, int itemIndex) {
+    print('adding new item');
+    setState(() {
+      if (itemIndex == -1) {
+        lists[listIndex].children.add(newItem);
+      } else {
+        lists[listIndex].children.insert(itemIndex, newItem);
+      }
+    });
+  }
+
+  onListAdd(DragAndDropListInterface newList, int listIndex) {
+    print('adding new list');
+    setState(() {
+      if (listIndex == -1) {
+        lists.add(newList as DragAndDropList);
+      } else {
+        lists.insert(listIndex, newList as DragAndDropList);
+      }
+    });
+  }
+
+  DragAndDropList buildList(Kolumna kolumna) => DragAndDropList(
+        header: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(7.0)),
+                  color: Colors.pink,
+                ),
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  kolumna.tytul,
+                  // style: Theme.of(context).primaryTextTheme.headline6,
+                ),
+              ),
+            ),
+          ],
+        ),
+        footer: Row(
+          children: <Widget>[
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius:
+                      BorderRadius.vertical(bottom: Radius.circular(7.0)),
+                  color: Colors.pink,
+                ),
+                padding: EdgeInsets.all(10),
+              ),
+            ),
+          ],
+        ),
+        leftSide: VerticalDivider(
+          color: Colors.pink,
+          width: 1.5,
+          thickness: 1.5,
+        ),
+        rightSide: VerticalDivider(
+          color: Colors.pink,
+          width: 1.5,
+          thickness: 1.5,
+        ),
+        children: [
+          DragAndDropItem(
+            child: ListTile(
+              leading: Image.network(
+                'http://ogrodnictwo.expert/wp-content/uploads/2016/09/Fotolia_57641864_Subscription_Monthly_XL-800x500_c.jpg',
+                width: 40,
+                height: 40,
+                //fit: BoxFit.cover,
+              ),
+              title: Text('1'),
+            ),
+          ),
+          DragAndDropItem(
+            child: ListTile(
+              leading: Image.network(
+                'http://ogrodnictwo.expert/wp-content/uploads/2016/09/Fotolia_57641864_Subscription_Monthly_XL-800x500_c.jpg',
+                width: 40,
+                height: 40,
+                //fit: BoxFit.cover,
+              ),
+              title: Text('1'),
+            ),
+          ),
+        ],
+      );
 }
 
 class DraggableList {
@@ -124,26 +262,3 @@ class DraggableListItem {
     required this.urlImage,
   });
 }
-
-DragAndDropList buildList(Kolumna kolumna) => DragAndDropList(
-      header: Container(
-        padding: EdgeInsets.all(8),
-        child: Text(
-          kolumna.tytul,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18.0),
-        ),
-      ),
-      children: [
-        DragAndDropItem(
-          child: ListTile(
-            leading: Image.network(
-              'http://ogrodnictwo.expert/wp-content/uploads/2016/09/Fotolia_57641864_Subscription_Monthly_XL-800x500_c.jpg',
-              width: 40,
-              height: 40,
-              //fit: BoxFit.cover,
-            ),
-            title: Text('1'),
-          ),
-        )
-      ],
-    );

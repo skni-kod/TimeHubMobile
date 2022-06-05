@@ -20,7 +20,6 @@ void main() {
       ChangeNotifierProvider<ModelUzytkownika>(
           create: (context) => ModelUzytkownika()),
       ChangeNotifierProvider<ModelTablicy>(create: (context) => ModelTablicy()),
-      ChangeNotifierProvider<ModelKolumny>(create: (context) => ModelKolumny())
     ],
     child: const TimeHub(),
   ));

@@ -10,7 +10,9 @@ import 'dart:convert';
 import 'package:timehubmobile/Store/userModel.dart';
 
 class ModelTablicy extends ChangeNotifier {
+  late Tablica tablica = Tablica(tytul: '', czyZautomatyzowane: false);
   late List<Tablica> tablice;
+  late List<Kolumna> kolumny;
   String bledy = "";
   bool ok = false;
   String get blad => bledy;
@@ -36,6 +38,54 @@ class ModelTablicy extends ChangeNotifier {
       // If the server did not return a 200 OK response,
       // then throw an exception.
       bledy = 'Blad podczas tworzenia tablicy!';
+    }
+  }
+
+  Future dodajTablice(tytul, czyZautomatyzowana, BuildContext context) async {
+    final odpowiedz = await http
+        .post(Uri.parse('http://10.0.2.2:8000/api/tablice/'), headers: {
+      "Authorization": 'Bearer ' +
+          Provider.of<ModelUzytkownika>(context, listen: false).token,
+    }, body: {
+      'tytul': tytul,
+      'czy_zautomatyzowane': czyZautomatyzowana
+    });
+    if (odpowiedz.statusCode == 201) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      tablica = Tablica.utworz(json.decode(odpowiedz.body)['tytul'],
+          json.decode(odpowiedz.body)['czyZautomatyzowana']);
+      tablice.add(tablica);
+      print(odpowiedz.body);
+      print('tablica dodana');
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      print(odpowiedz.body);
+    }
+  }
+
+  Future getKolumny(BuildContext context, int index) async {
+    final odpowiedz = await http.get(
+      Uri.parse(
+          'http://10.0.2.2:8000/api/tablicaKolumny/${Provider.of<ModelTablicy>(context, listen: false).tablice[index].id}'),
+      headers: {
+        "Authorization": 'Bearer ' +
+            Provider.of<ModelUzytkownika>(context, listen: false).token,
+      },
+    );
+    if (odpowiedz.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+
+      kolumny = (json.decode(odpowiedz.body) as List)
+          .map((i) => Kolumna.fromJson(i))
+          .toList();
+      print('wczytano kolumny');
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      bledy = 'Blad podczas wczytywania kolumn!';
     }
   }
 }
@@ -85,4 +135,31 @@ class Tablica {
     data['czy_zautomatyzowane'] = this.czyZautomatyzowane;
     return data;
   }
+
+  factory Tablica.utworz(tytul, czyZautomatyzowane) {
+    return Tablica(
+      tytul: tytul,
+      czyZautomatyzowane: czyZautomatyzowane,
+    );
+  }
+}
+
+class Kolumna {
+  Kolumna({
+    required this.tablica,
+    required this.tytul,
+  });
+
+  int tablica;
+  String tytul;
+
+  factory Kolumna.fromJson(Map<String, dynamic> json) => Kolumna(
+        tablica: json["tablica"],
+        tytul: json["tytul"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "tablica": tablica,
+        "tytul": tytul,
+      };
 }
