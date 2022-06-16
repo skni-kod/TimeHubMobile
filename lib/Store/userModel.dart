@@ -11,17 +11,18 @@ class ModelUzytkownika extends ChangeNotifier {
   String bledy = "";
 
   bool get zalogowany => uzytkownik.token != '';
-
+  String get token => uzytkownik.token;
   String get blad => bledy;
 
   Future login(nazwa, haslo) async {
     final odpowiedz = await http.post(
-        Uri.parse('https://projekt-timehub.herokuapp.com/dj_rest_auth/login/'),
+        Uri.parse('http://10.0.2.2:8000/dj_rest_auth/login/'),
         body: {'username': nazwa, 'password': haslo});
     if (odpowiedz.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      uzytkownik = Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["key"]);
+      uzytkownik =
+          Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["access_token"]);
       print(uzytkownik.token);
     } else {
       // If the server did not return a 200 OK response,
@@ -32,8 +33,7 @@ class ModelUzytkownika extends ChangeNotifier {
 
   Future register(nazwa, email, haslo, powtHaslo) async {
     final odpowiedz = await http.post(
-        Uri.parse(
-            'https://projekt-timehub.herokuapp.com/dj_rest_auth/registration/'),
+        Uri.parse('http://10.0.2.2:8000/dj_rest_auth/registration/'),
         body: {
           'username': nazwa,
           'password1': haslo,
@@ -43,7 +43,8 @@ class ModelUzytkownika extends ChangeNotifier {
     if (odpowiedz.statusCode == 201) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      uzytkownik = Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["key"]);
+      uzytkownik =
+          Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["access_token"]);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
