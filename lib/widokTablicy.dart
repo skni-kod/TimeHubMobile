@@ -2,12 +2,9 @@ import 'package:drag_and_drop_lists/drag_and_drop_list_interface.dart';
 import 'package:drag_and_drop_lists/drag_and_drop_lists.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'package:timehubmobile/Store/tablicaModel.dart';
-import 'package:timehubmobile/listaTablic.dart';
-import 'package:timehubmobile/style.dart';
-import 'package:timehubmobile/test_list.dart';
-import 'package:timehubmobile/test_list.dart';
+
+import 'listaTablic.dart';
 
 class WidokTablicy extends StatefulWidget {
   const WidokTablicy({Key? key}) : super(key: key);
@@ -30,10 +27,15 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
 
   @override
   Widget build(BuildContext context) {
-    final args = ModalRoute.of(context)!.settings.arguments as ScreenArguments;
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tablica ${args.index}: ${args.title}"),
+        title: Text(Provider.of<ModelTablicy>(context).tablica.tytul!),
+        actions: [
+          Builder(
+              builder: (context) => IconButton(
+                  onPressed: () => openEditEntryDialog(),
+                  icon: const Icon(Icons.settings)))
+        ],
       ),
       body: Column(children: [
         Expanded(
@@ -241,6 +243,21 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
           ),
         ],
       );
+
+  Future openEditEntryDialog() async {
+    Tablica? zmiana =
+        await Navigator.of(context).push(MaterialPageRoute<Tablica>(
+            builder: (BuildContext context) {
+              return AddEntryDialog.edit(
+                  Provider.of<ModelTablicy>(context, listen: false).tablica);
+            },
+            fullscreenDialog: true));
+    if (zmiana != null) {
+      debugPrint('zmiana');
+      await Provider.of<ModelTablicy>(context, listen: false)
+          .edytujTablice(zmiana, context);
+    }
+  }
 }
 
 class DraggableList {
@@ -261,4 +278,50 @@ class DraggableListItem {
     required this.title,
     required this.urlImage,
   });
+}
+
+GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+Future<void> pokazOkno(BuildContext context) async {
+  return await showDialog(
+      context: context,
+      builder: (context) {
+        final TextEditingController _edycjaTekstuController =
+            TextEditingController();
+        bool isChecked = false;
+        return StatefulBuilder(builder: (context, setState) {
+          return AlertDialog(
+            content: Form(
+              key: _formKey,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                TextFormField(
+                  controller: _edycjaTekstuController,
+                  validator: (value) {
+                    return value!.isNotEmpty ? null : "Nie poprawna wartośc";
+                  },
+                  decoration: InputDecoration(hintText: 'Wpisz nazwę tablicy'),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Czy zautomatyzowana"),
+                  ],
+                )
+              ]),
+            ),
+            actions: [
+              TextButton(
+                  child: Text("Stwórz"),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      await Provider.of<ModelTablicy>(context, listen: false)
+                          .dodajTablice(_edycjaTekstuController.text,
+                              isChecked ? 'true' : 'false', context);
+
+                      Navigator.of(context).pop();
+                    }
+                  })
+            ],
+          );
+        });
+      });
 }

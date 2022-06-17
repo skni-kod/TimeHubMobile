@@ -1,16 +1,14 @@
 import 'dart:collection';
 import 'dart:developer';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'dart:convert';
 import 'package:timehubmobile/Store/userModel.dart';
 
 class ModelTablicy extends ChangeNotifier {
-  late Tablica tablica = Tablica(tytul: '', czyZautomatyzowane: false);
+  late Tablica tablica = Tablica(id: -1, tytul: '', czyZautomatyzowane: false);
   late List<Tablica> tablice;
   late List<Kolumna> kolumny;
   String bledy = "";
@@ -48,16 +46,18 @@ class ModelTablicy extends ChangeNotifier {
           Provider.of<ModelUzytkownika>(context, listen: false).token,
     }, body: {
       'tytul': tytul,
-      'czy_zautomatyzowane': czyZautomatyzowana
+      'czy_zautomatyzowane': czyZautomatyzowana ? 'true' : 'false'
     });
     if (odpowiedz.statusCode == 201) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      tablica = Tablica.utworz(json.decode(odpowiedz.body)['tytul'],
-          json.decode(odpowiedz.body)['czyZautomatyzowana']);
+      tablica = Tablica.utworz(
+          json.decode(odpowiedz.body)['id'],
+          json.decode(odpowiedz.body)['tytul'],
+          json.decode(odpowiedz.body)['czy_zautomatyzowane']);
       tablice.add(tablica);
-      print(odpowiedz.body);
-      print('tablica dodana');
+      debugPrint(odpowiedz.body);
+      debugPrint('tablica dodana');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -81,11 +81,70 @@ class ModelTablicy extends ChangeNotifier {
       kolumny = (json.decode(odpowiedz.body) as List)
           .map((i) => Kolumna.fromJson(i))
           .toList();
+      tablica = Tablica.utworz(
+          Provider.of<ModelTablicy>(context, listen: false).tablice[index].id,
+          Provider.of<ModelTablicy>(context, listen: false)
+              .tablice[index]
+              .tytul,
+          Provider.of<ModelTablicy>(context, listen: false)
+              .tablice[index]
+              .czyZautomatyzowane);
       print('wczytano kolumny');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
       bledy = 'Blad podczas wczytywania kolumn!';
+    }
+  }
+
+  Future edytujTablice(Tablica zmiana, BuildContext context) async {
+    final odpowiedz = await http.patch(
+        Uri.parse('http://10.0.2.2:8000/api/tablice/${tablica.id}/'),
+        headers: {
+          "Authorization": 'Bearer ' +
+              Provider.of<ModelUzytkownika>(context, listen: false).token,
+        },
+        body: {
+          'id': tablica.id.toString(),
+          'tytul': zmiana.tytul,
+          'czy_zautomatyzowane': tablica.czyZautomatyzowane! ? 'true' : 'false'
+        });
+    if (odpowiedz.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      int _index = tablice.indexWhere((tab) => tab.id == tablica.id);
+      debugPrint(_index.toString());
+
+      tablice.removeAt(_index);
+      tablica = Tablica.utworz(
+          json.decode(odpowiedz.body)['id'],
+          json.decode(odpowiedz.body)['tytul'],
+          json.decode(odpowiedz.body)['czy_zautomatyzowane']);
+      tablice.insert(_index, tablica);
+      debugPrint('Tablica edytowana');
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      debugPrint(odpowiedz.body);
+    }
+  }
+
+  Future usunTablice(BuildContext context) async {
+    final odpowiedz = await http.delete(
+        Uri.parse('http://10.0.2.2:8000/api/tablice/${tablica.id}/'),
+        headers: {
+          "Authorization": 'Bearer ' +
+              Provider.of<ModelUzytkownika>(context, listen: false).token,
+        });
+    if (odpowiedz.statusCode == 204) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      tablice.remove(tablica);
+      debugPrint('Tablica usunieta');
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      debugPrint(odpowiedz.body);
     }
   }
 }
@@ -118,7 +177,7 @@ class Tablice {
 class Tablica {
   int? id;
   String? tytul;
-  bool? czyZautomatyzowane;
+  bool? czyZautomatyzowane = false;
 
   Tablica({this.id, this.tytul, this.czyZautomatyzowane});
 
@@ -136,8 +195,9 @@ class Tablica {
     return data;
   }
 
-  factory Tablica.utworz(tytul, czyZautomatyzowane) {
+  factory Tablica.utworz(id, tytul, czyZautomatyzowane) {
     return Tablica(
+      id: id,
       tytul: tytul,
       czyZautomatyzowane: czyZautomatyzowane,
     );

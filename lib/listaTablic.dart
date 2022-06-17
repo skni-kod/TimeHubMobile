@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'package:timehubmobile/Store/tablicaModel.dart';
-import 'package:timehubmobile/style.dart';
-import 'package:timehubmobile/widokTablicy.dart';
 
 class ListaTablic extends StatefulWidget {
   const ListaTablic({Key? key}) : super(key: key);
@@ -23,7 +21,12 @@ class _StanListyTablic extends State<ListaTablic> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Twoje tablice"),
-        actions: [buildDodajTabliceButton(context)],
+        actions: [
+          Builder(
+              builder: (context) => IconButton(
+                  onPressed: () => openAddEntryDialog(),
+                  icon: const Icon(Icons.add)))
+        ],
       ),
       body: GridView.count(
         crossAxisCount: 2,
@@ -36,13 +39,11 @@ class _StanListyTablic extends State<ListaTablic> {
               debugPrint("Tablica $index pressed");
               await Provider.of<ModelTablicy>(context, listen: false)
                   .getKolumny(context, index);
-              Navigator.pushNamed(context, "/widokTablicy",
-                  arguments: ScreenArguments(
-                      index,
-                      Provider.of<ModelTablicy>(context, listen: false)
-                          .tablice[index]
-                          .tytul
-                          .toString()));
+              Navigator.pushNamed(context, "/widokTablicy")
+                  .then((_) => setState(() {
+                        Provider.of<ModelTablicy>(context, listen: false)
+                            .getTablica(context);
+                      }));
             },
             highlightColor: Colors.white,
             splashColor: Colors.white,
@@ -91,79 +92,144 @@ class _StanListyTablic extends State<ListaTablic> {
     );
   }
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  Future<void> pokazOkno(BuildContext context) async {
-    return await showDialog(
-        context: context,
-        builder: (context) {
-          final TextEditingController _edycjaTekstuController =
-              TextEditingController();
-          bool isChecked = false;
-          return StatefulBuilder(builder: (context, setState) {
-            return AlertDialog(
-              content: Form(
-                key: _formKey,
-                child: Column(mainAxisSize: MainAxisSize.min, children: [
-                  TextFormField(
-                    controller: _edycjaTekstuController,
-                    validator: (value) {
-                      return value!.isNotEmpty ? null : "Nie poprawna wartośc";
-                    },
-                    decoration:
-                        InputDecoration(hintText: 'Wpisz nazwę tablicy'),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text("Czy zautomatyzowana"),
-                      Checkbox(
-                          value: isChecked,
-                          onChanged: (checked) {
-                            setState(() {
-                              isChecked = checked!;
-                            });
-                          })
-                    ],
-                  )
-                ]),
-              ),
-              actions: [
-                TextButton(
-                    child: Text("Stwórz"),
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        await Provider.of<ModelTablicy>(context, listen: false)
-                            .dodajTablice(_edycjaTekstuController.text,
-                                isChecked ? 'true' : 'false', context);
-
-                        Navigator.of(context).pop();
-                      }
-                    })
-              ],
-            );
-          });
-        });
-  }
-
-  Widget buildDodajTabliceButton(BuildContext context) => IconButton(
-      icon: Icon(
-        Icons.add,
-      ),
-      splashRadius: 25,
-      splashColor: Color.fromARGB(255, 54, 136, 202),
-      onPressed: () async {
-        debugPrint('Dodaj tablice clicked');
-        await pokazOkno(context);
-        setState(() {
-          Provider.of<ModelTablicy>(context, listen: false).getTablica(context);
-        });
+  Future openAddEntryDialog() async {
+    Tablica? save = await Navigator.of(context).push(MaterialPageRoute<Tablica>(
+        builder: (BuildContext context) {
+          return AddEntryDialog.add();
+        },
+        fullscreenDialog: true));
+    if (save != null) {
+      await Provider.of<ModelTablicy>(context, listen: false)
+          .dodajTablice(save.tytul, save.czyZautomatyzowane, context);
+      setState(() {
+        Provider.of<ModelTablicy>(context, listen: false).getTablica(context);
       });
+    }
+  }
 }
 
-class ScreenArguments {
-  final int index;
-  final String title;
+class AddEntryDialog extends StatefulWidget {
+  final Tablica initTab;
+  AddEntryDialog.add({Key? key})
+      : initTab = Tablica(id: -1, tytul: '', czyZautomatyzowane: false),
+        super(key: key);
 
-  ScreenArguments(this.index, this.title);
+  AddEntryDialog.edit(Tablica tab) : initTab = tab;
+
+  @override
+  AddEntryDialogState createState() {
+    return AddEntryDialogState(initTab);
+  }
+}
+
+class AddEntryDialogState extends State<AddEntryDialog> {
+  bool isChecked = false;
+  late TextEditingController _textController;
+  TextEditingController _deleteTextController = TextEditingController();
+  Tablica tab;
+  final _kluczFormularza = GlobalKey<FormFieldState>();
+  final _kluczFormularzaUsun = GlobalKey<FormFieldState>();
+
+  AppBar _createAppBar(BuildContext context) {
+    return AppBar(
+      title: widget.initTab.id == -1
+          ? const Text("New entry")
+          : const Text("Edit entry"),
+      actions: [
+        TextButton(
+          onPressed: () {
+            if (_kluczFormularza.currentState!.validate()) {
+              tab.czyZautomatyzowane = isChecked;
+              debugPrint(tab.tytul);
+              debugPrint(tab.czyZautomatyzowane.toString());
+              debugPrint(tab.id.toString());
+              Navigator.of(context).pop(tab);
+            }
+          },
+          child: const Text('SAVE', style: TextStyle(color: Colors.white)),
+        )
+      ],
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.initTab.tytul);
+    tab = widget.initTab;
+    isChecked = tab.czyZautomatyzowane!;
+  }
+
+  AddEntryDialogState(this.tab);
+  @override
+  Widget build(BuildContext context) {
+    tab.czyZautomatyzowane = false;
+    return Scaffold(
+      appBar: _createAppBar(context),
+      body: ListView(children: [
+        ListTile(
+          leading: Icon(Icons.title, color: Colors.grey[500]),
+          title: TextFormField(
+            key: _kluczFormularza,
+            validator: (tresc) {
+              if (tresc == null || tresc.isEmpty) {
+                return 'Musisz wypełnić to pole!';
+              }
+              return null;
+            },
+            decoration: const InputDecoration(
+              hintText: 'Tytuł',
+            ),
+            controller: _textController,
+            onChanged: (value) => tab.tytul = value,
+          ),
+        ),
+        SwitchListTile(
+            title: Text("Zautomatyzowana"),
+            value: isChecked,
+            secondary: const Icon(FontAwesomeIcons.gear),
+            onChanged: (checked) {
+              if (widget.initTab.id == -1) {
+                setState(() {
+                  isChecked = checked;
+                });
+              }
+            }),
+        widget.initTab.id != -1
+            ? ListTile(
+                leading: const Icon(
+                  Icons.delete,
+                  color: Colors.redAccent,
+                ),
+                trailing: TextButton(
+                    child: const Text('USUŃ'),
+                    onPressed: () async {
+                      if (_kluczFormularzaUsun.currentState!.validate()) {
+                        await Provider.of<ModelTablicy>(context, listen: false)
+                            .usunTablice(context);
+                        await Provider.of<ModelTablicy>(context, listen: false)
+                            .getTablica(context);
+
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                        setState(() {});
+                      }
+                    }),
+                title: TextFormField(
+                  key: _kluczFormularzaUsun,
+                  validator: (tresc) {
+                    if (tresc != tab.tytul || tresc == null || tresc.isEmpty) {
+                      return 'Musisz podać tytuł tablicy!';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    hintText: 'Wpisz nazwę tablicy',
+                  ),
+                ),
+              )
+            : Text('')
+      ]),
+    );
+  }
 }
