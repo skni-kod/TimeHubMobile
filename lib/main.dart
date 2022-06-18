@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:timehubmobile/Store/tasksModel.dart';
 import 'package:timehubmobile/Store/userModel.dart';
 import 'package:flutter/services.dart';
+import "package:flutter_localizations/flutter_localizations.dart";
 
 void main() {
   runApp(MultiProvider(
@@ -37,6 +38,13 @@ class TimeHub extends StatelessWidget {
     ]);
 
     return MaterialApp(
+      
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('en'), const Locale('pl')],
       title: 'TimeHub',
       theme: ThemeData(
         primarySwatch: Colors.blue,

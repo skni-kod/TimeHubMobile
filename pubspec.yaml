@@ -29,8 +29,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: # Add this line
+    sdk: flutter         # Add this line
   provider: ^6.0.0
   path_provider: ^2.0.0
+  flutter_rounded_date_picker: ^2.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -38,6 +41,7 @@ dependencies:
   http: ^0.13.4
   drag_and_drop_lists: ^0.3.2+2
   font_awesome_flutter: ^10.1.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

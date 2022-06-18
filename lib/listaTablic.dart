@@ -39,6 +39,11 @@ class _StanListyTablic extends State<ListaTablic> {
               debugPrint("Tablica $index pressed");
               await Provider.of<ModelTablicy>(context, listen: false)
                   .getKolumny(context, index);
+              await Provider.of<ModelTablicy>(context, listen: false)
+                  .getNotatki(context);
+              //  Provider.of<ModelTablicy>(context, listen: false).tablica =
+              //      Provider.of<ModelTablicy>(context, listen: false)
+              //          .tablice[index];
               Navigator.pushNamed(context, "/widokTablicy")
                   .then((_) => setState(() {
                         Provider.of<ModelTablicy>(context, listen: false)
