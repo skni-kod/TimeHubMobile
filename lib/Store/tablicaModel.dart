@@ -19,7 +19,7 @@ class ModelTablicy extends ChangeNotifier {
 
   Future getTablica(BuildContext context) async {
     final odpowiedz = await http.get(
-      Uri.parse('http://projekt-timehub.herokuapp.com/api/uzytkownikTablice'),
+      Uri.parse('https://projekt-timehub.herokuapp.com/api/uzytkownikTablice'),
       headers: {
         "Authorization": 'Bearer ' +
             Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -43,7 +43,7 @@ class ModelTablicy extends ChangeNotifier {
 
   Future dodajTablice(tytul, czyZautomatyzowana, BuildContext context) async {
     final odpowiedz = await http.post(
-        Uri.parse('http://projekt-timehub.herokuapp.com/api/tablice/'),
+        Uri.parse('https://projekt-timehub.herokuapp.com/api/tablice/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -72,7 +72,7 @@ class ModelTablicy extends ChangeNotifier {
   Future getKolumny(BuildContext context, int index) async {
     final odpowiedz = await http.get(
       Uri.parse(
-          'http://projekt-timehub.herokuapp.com/api/tablicaKolumny/${Provider.of<ModelTablicy>(context, listen: false).tablice[index].id}'),
+          'https://projekt-timehub.herokuapp.com/api/tablicaKolumny/${Provider.of<ModelTablicy>(context, listen: false).tablice[index].id}'),
       headers: {
         "Authorization": 'Bearer ' +
             Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -104,7 +104,7 @@ class ModelTablicy extends ChangeNotifier {
   Future edytujTablice(Tablica zmiana, BuildContext context) async {
     final odpowiedz = await http.patch(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/tablice/${tablica.id}/'),
+            'https://projekt-timehub.herokuapp.com/api/tablice/${tablica.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -137,7 +137,7 @@ class ModelTablicy extends ChangeNotifier {
   Future usunTablice(BuildContext context) async {
     final odpowiedz = await http.delete(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/tablice/${tablica.id}/'),
+            'https://projekt-timehub.herokuapp.com/api/tablice/${tablica.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -156,7 +156,7 @@ class ModelTablicy extends ChangeNotifier {
 
   Future getNotatki(BuildContext context) async {
     final odpowiedz = await http.get(
-      Uri.parse('http://projekt-timehub.herokuapp.com/api/uzytkownikNotatki/'),
+      Uri.parse('https://projekt-timehub.herokuapp.com/api/uzytkownikNotatki/'),
       headers: {
         "Authorization": 'Bearer ' +
             Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -187,7 +187,7 @@ class ModelTablicy extends ChangeNotifier {
       int notatkaIndex, int nowaKolumna, BuildContext context) async {
     final odpowiedz = await http.patch(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/notatka/$notatkaIndex/'),
+            'https://projekt-timehub.herokuapp.com/api/notatka/$notatkaIndex/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -210,7 +210,7 @@ class ModelTablicy extends ChangeNotifier {
   Future addNotatka(Notatka note, BuildContext context, int indexKolumna,
       int indexNotatka) async {
     final odpowiedz = await http.post(
-        Uri.parse('http://projekt-timehub.herokuapp.com/api/notatka/'),
+        Uri.parse('https://projekt-timehub.herokuapp.com/api/notatka/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -240,7 +240,7 @@ class ModelTablicy extends ChangeNotifier {
   Future addKolumna(
       Kolumna kolumna, BuildContext context, int indexKolumna) async {
     final odpowiedz = await http.post(
-        Uri.parse('http://projekt-timehub.herokuapp.com/api/kolumny/'),
+        Uri.parse('https://projekt-timehub.herokuapp.com/api/kolumny/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -266,7 +266,7 @@ class ModelTablicy extends ChangeNotifier {
   Future usunNotatke(BuildContext context, Notatka note) async {
     final odpowiedz = await http.delete(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/notatka/${note.id}/'),
+            'https://projekt-timehub.herokuapp.com/api/notatka/${note.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -288,7 +288,7 @@ class ModelTablicy extends ChangeNotifier {
   Future edytujNotatka(Notatka zmiana, BuildContext context) async {
     final odpowiedz = await http.patch(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/notatka/${zmiana.id}/'),
+            'https://projekt-timehub.herokuapp.com/api/notatka/${zmiana.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -321,7 +321,7 @@ class ModelTablicy extends ChangeNotifier {
   Future edytujKolumna(Kolumna zmiana, BuildContext context) async {
     final odpowiedz = await http.patch(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/kolumny/${zmiana.id}/'),
+            'https://projekt-timehub.herokuapp.com/api/kolumny/${zmiana.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
@@ -346,7 +346,7 @@ class ModelTablicy extends ChangeNotifier {
   Future usunKolumna(BuildContext context, Kolumna kolumna) async {
     final odpowiedz = await http.delete(
         Uri.parse(
-            'http://projekt-timehub.herokuapp.com/api/kolumny/${kolumna.id}/'),
+            'https://projekt-timehub.herokuapp.com/api/kolumny/${kolumna.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
