@@ -52,7 +52,7 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
               borderRadius: BorderRadius.circular(10)),
           children: lists,
           itemDecorationWhileDragging: const BoxDecoration(
-            color: Colors.grey,
+            color: Color.fromARGB(121, 41, 113, 155),
             borderRadius: BorderRadius.all(Radius.circular(7.0)),
             boxShadow: <BoxShadow>[
               BoxShadow(
@@ -82,14 +82,14 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
               children: <Widget>[
                 Expanded(
                   child: Container(
-                    color: Colors.pink,
+                    color: Color.fromARGB(255, 221, 27, 27),
                     child: Center(
                       child: Draggable<DragAndDropListInterface>(
                         feedback: Icon(Icons.add_box),
                         child: Icon(Icons.add_box),
                         data: DragAndDropList(
-                          header: Text(
-                            'New default list',
+                          header: const Text(
+                            'Nowa kolumna',
                           ),
                           children: <DragAndDropItem>[],
                         ),
@@ -118,7 +118,7 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
         ? DragHandleVerticalAlignment.top
         : DragHandleVerticalAlignment.center;
 
-    final color = isList ? Colors.blueGrey : Colors.black26;
+    final color = isList ? Color.fromARGB(255, 75, 143, 177) : Colors.black26;
 
     return DragHandle(
         verticalAlignment: verticalAligment,
@@ -186,7 +186,7 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   }
 
   onItemAdd(DragAndDropItem newItem, int listIndex, int itemIndex) {
-    debugPrint('adding new item');
+    debugPrint('Dodawanie nowej notatki');
     setState(() {
       if (itemIndex == -1) {
         openAddNotatkaDialog(itemIndex, listIndex);
@@ -197,7 +197,7 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   }
 
   onListAdd(DragAndDropListInterface newList, int listIndex) {
-    debugPrint('adding new list');
+    debugPrint('Dodawanie nowej kolumny');
     setState(() {
       if (listIndex == -1) {
         openAddKolumnaDialog(listIndex);
@@ -489,7 +489,7 @@ class AddEditNotatkaState extends State<AddEditNotatka> {
       appBar: _createAppBar(context),
       body: ListView(children: [
         SwitchListTile(
-            title: Text("Ważna"),
+            title: const Text("Ważna"),
             value: isCheckedI,
             secondary: const Icon(
               FontAwesomeIcons.solidStar,
@@ -502,7 +502,7 @@ class AddEditNotatkaState extends State<AddEditNotatka> {
             }),
         widget.initNotatka.id != -1
             ? SwitchListTile(
-                title: Text("Ukończona"),
+                title: const Text("Ukończona"),
                 value: isCheckedC,
                 secondary: const Icon(
                   Icons.done,
@@ -626,7 +626,7 @@ class AddEditKolumnaState extends State<AddEditKolumna> {
               Navigator.of(context).pop(kolumna);
             }
           },
-          child: const Text('SAVE', style: TextStyle(color: Colors.white)),
+          child: const Text('Zapisz', style: TextStyle(color: Colors.white)),
         )
       ],
     );
@@ -703,7 +703,7 @@ class AddEditKolumnaState extends State<AddEditKolumna> {
                   ),
                 ),
               )
-            : Text('')
+            : const SizedBox(height: 0.0)
       ]),
     );
   }

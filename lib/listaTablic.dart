@@ -33,7 +33,7 @@ class _StanListyTablic extends State<ListaTablic> {
         children: List.generate(
             Provider.of<ModelTablicy>(context, listen: false).tablice.length,
             (index) {
-          print('tablice wygenerowane');
+          debugPrint('tablice wygenerowane');
           return InkWell(
             onTap: () async {
               debugPrint("Tablica $index pressed");
@@ -138,8 +138,8 @@ class AddEntryDialogState extends State<AddEntryDialog> {
   AppBar _createAppBar(BuildContext context) {
     return AppBar(
       title: widget.initTab.id == -1
-          ? const Text("New entry")
-          : const Text("Edit entry"),
+          ? const Text("Nowa tablica")
+          : const Text("Edytowanie tablicy"),
       actions: [
         TextButton(
           onPressed: () {
@@ -151,7 +151,7 @@ class AddEntryDialogState extends State<AddEntryDialog> {
               Navigator.of(context).pop(tab);
             }
           },
-          child: const Text('SAVE', style: TextStyle(color: Colors.white)),
+          child: const Text('Zapisz', style: TextStyle(color: Colors.white)),
         )
       ],
     );
@@ -190,7 +190,7 @@ class AddEntryDialogState extends State<AddEntryDialog> {
           ),
         ),
         SwitchListTile(
-            title: Text("Zautomatyzowana"),
+            title: const Text("Zautomatyzowana"),
             value: isChecked,
             secondary: const Icon(FontAwesomeIcons.gear),
             onChanged: (checked) {
@@ -228,12 +228,12 @@ class AddEntryDialogState extends State<AddEntryDialog> {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     hintText: 'Wpisz nazwę tablicy',
                   ),
                 ),
               )
-            : Text('')
+            : const SizedBox(height: 0.0)
       ]),
     );
   }
