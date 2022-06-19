@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:timehubmobile/Store/tablicaModel.dart';
 import 'package:timehubmobile/calendar.dart';
 import 'package:timehubmobile/home.dart';
+import 'package:timehubmobile/listaTablic.dart';
+import 'package:timehubmobile/widokTablicy.dart';
 import 'package:timehubmobile/notes.dart';
 import 'package:timehubmobile/logowanie.dart';
 import 'package:timehubmobile/rejestracja.dart';
@@ -8,13 +11,15 @@ import 'package:provider/provider.dart';
 import 'package:timehubmobile/Store/tasksModel.dart';
 import 'package:timehubmobile/Store/userModel.dart';
 import 'package:flutter/services.dart';
+import "package:flutter_localizations/flutter_localizations.dart";
 
 void main() {
   runApp(MultiProvider(
     providers: [
       //ChangeNotifierProvider<TasksModel>(create: (context) => TasksModel()),
       ChangeNotifierProvider<ModelUzytkownika>(
-          create: (context) => ModelUzytkownika())
+          create: (context) => ModelUzytkownika()),
+      ChangeNotifierProvider<ModelTablicy>(create: (context) => ModelTablicy()),
     ],
     child: const TimeHub(),
   ));
@@ -33,6 +38,13 @@ class TimeHub extends StatelessWidget {
     ]);
 
     return MaterialApp(
+      
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('en'), const Locale('pl')],
       title: 'TimeHub',
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -44,6 +56,8 @@ class TimeHub extends StatelessWidget {
         //"/calendar": ((context) => Calendar()),
         "/logowanie": ((context) => const Logowanie()),
         "/rejestracja": ((context) => const Rejestracja()),
+        "/listaTablic": ((context) => const ListaTablic()),
+        '/widokTablicy': ((context) => const WidokTablicy()),
       },
     );
   }

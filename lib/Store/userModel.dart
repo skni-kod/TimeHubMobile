@@ -11,7 +11,7 @@ class ModelUzytkownika extends ChangeNotifier {
   String bledy = "";
 
   bool get zalogowany => uzytkownik.token != '';
-
+  String get token => uzytkownik.token;
   String get blad => bledy;
 
   Future login(nazwa, haslo) async {
@@ -21,7 +21,8 @@ class ModelUzytkownika extends ChangeNotifier {
     if (odpowiedz.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      uzytkownik = Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["key"]);
+      uzytkownik =
+          Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["access_token"]);
       print(uzytkownik.token);
     } else {
       // If the server did not return a 200 OK response,
@@ -43,7 +44,8 @@ class ModelUzytkownika extends ChangeNotifier {
     if (odpowiedz.statusCode == 201) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      uzytkownik = Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["key"]);
+      uzytkownik =
+          Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["access_token"]);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
