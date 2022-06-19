@@ -346,7 +346,7 @@ class ModelTablicy extends ChangeNotifier {
   Future usunKolumna(BuildContext context, Kolumna kolumna) async {
     final odpowiedz = await http.delete(
         Uri.parse(
-            'http:/projekt-timehub.herokuapp.com/api/kolumny/${kolumna.id}/'),
+            'http://projekt-timehub.herokuapp.com/api/kolumny/${kolumna.id}/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,
