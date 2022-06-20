@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   http: ^0.13.4
   drag_and_drop_lists: ^0.3.2+2
+  fl_chart: ^0.55.0
 
 dev_dependencies:
   flutter_test:

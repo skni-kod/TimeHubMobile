@@ -209,7 +209,7 @@ class UzytkownikZalogowany {
                       color: Colors.blue,
                       constraints: const BoxConstraints(),
                       icon: const Icon(Icons.insights, size: 40),
-                      onPressed: () {},
+                      onPressed: () => Navigator.pushNamed(context, "/wykresy"),
                     ),
                   ),
                   const SizedBox(
@@ -223,16 +223,7 @@ class UzytkownikZalogowany {
                       color: Colors.blue,
                     ),
                   ),
-                ]),
-                const Positioned(
-                  child: Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 25,
-                  ),
-                  top: -3,
-                  right: 26,
-                ),
+                ])
               ],
             ))
       ]),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'package:timehubmobile/Store/tablicaModel.dart';
+import 'package:timehubmobile/Store/wykresModel.dart';
 import 'package:timehubmobile/calendar.dart';
 import 'package:timehubmobile/home.dart';
 import 'package:timehubmobile/listaTablic.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:timehubmobile/Store/notatkaModel.dart';
 import 'package:timehubmobile/Store/userModel.dart';
 import 'package:flutter/services.dart';
+import 'package:timehubmobile/charts.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -18,7 +20,8 @@ void main() {
       ChangeNotifierProvider<ModelUzytkownika>(
           create: (context) => ModelUzytkownika()),
       ChangeNotifierProvider<ModelTablicy>(create: (context) => ModelTablicy()),
-      ChangeNotifierProvider<ModelNotatek>(create: (context) => ModelNotatek())
+      ChangeNotifierProvider<ModelNotatek>(create: (context) => ModelNotatek()),
+      ChangeNotifierProvider<ModelWykresu>(create: (context) => ModelWykresu())
     ],
     child: const TimeHub(),
   ));
@@ -42,12 +45,12 @@ class TimeHub extends StatelessWidget {
       initialRoute: "/",
       routes: {
         "/": (context) => Home(),
-        //"/notes": (context) => Notes(),
         "/calendar": ((context) => Calendar()),
         "/logowanie": ((context) => const Logowanie()),
         "/rejestracja": ((context) => const Rejestracja()),
         "/listaTablic": ((context) => const ListaTablic()),
         '/widokTablicy': ((context) => const WidokTablicy()),
+        '/wykresy': ((context) => Wykresy())
       },
     );
   }
