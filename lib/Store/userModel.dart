@@ -1,13 +1,9 @@
-import 'dart:collection';
-import 'dart:developer';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class ModelUzytkownika extends ChangeNotifier {
-  late Uzytkownik uzytkownik = new Uzytkownik(nazwaUzytkownika: '', token: '');
+  late Uzytkownik uzytkownik = new Uzytkownik.usun();
   String bledy = "";
 
   bool get zalogowany => uzytkownik.token != '';
@@ -21,9 +17,7 @@ class ModelUzytkownika extends ChangeNotifier {
     if (odpowiedz.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      uzytkownik =
-          Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["access_token"]);
-      print(uzytkownik.token);
+      uzytkownik = Uzytkownik.utworz(jsonDecode(odpowiedz.body));
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -44,8 +38,7 @@ class ModelUzytkownika extends ChangeNotifier {
     if (odpowiedz.statusCode == 201) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      uzytkownik =
-          Uzytkownik.utworz(nazwa, jsonDecode(odpowiedz.body)["access_token"]);
+      uzytkownik = Uzytkownik.utworz(jsonDecode(odpowiedz.body));
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -54,24 +47,42 @@ class ModelUzytkownika extends ChangeNotifier {
   }
 
   void wyloguj() {
-    print('e');
-    uzytkownik = const Uzytkownik(nazwaUzytkownika: '', token: '');
+    uzytkownik = Uzytkownik.usun();
   }
 }
 
 class Uzytkownik {
-  final String nazwaUzytkownika;
+  final int pk;
+  final String username;
+  final String email;
+  final String first_name;
+  final String last_name;
   final String token;
 
-  const Uzytkownik({
-    required this.nazwaUzytkownika,
-    required this.token,
-  });
+  const Uzytkownik(
+      {required this.token,
+      required this.pk,
+      required this.username,
+      required this.email,
+      required this.first_name,
+      required this.last_name});
 
-  factory Uzytkownik.utworz(nazwa, token) {
+  factory Uzytkownik.utworz(model) {
     return Uzytkownik(
-      nazwaUzytkownika: nazwa,
-      token: token,
-    );
+        token: model['access_token'],
+        username: model['user']['username'],
+        pk: model['user']['pk'],
+        email: model['user']['email'],
+        first_name: model['user']['first_name'],
+        last_name: model['user']['last_name']);
+  }
+  factory Uzytkownik.usun() {
+    return Uzytkownik(
+        token: '',
+        username: '',
+        pk: 0,
+        email: '',
+        first_name: '',
+        last_name: '');
   }
 }
