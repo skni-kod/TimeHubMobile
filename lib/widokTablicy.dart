@@ -29,7 +29,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
 
   @override
   Widget build(BuildContext context) {
-    //debugPrint(notatki.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text(Provider.of<ModelTablicy>(context).tablica.tytul!),
@@ -147,7 +146,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
       final movedItemN = Provider.of<ModelTablicy>(context, listen: false)
           .notatkiL[oldListIndex]
           .removeAt(oldItemIndex);
-      debugPrint(movedItemN.id.toString());
       newListItems.insert(newItemIndex, movedItem);
       Provider.of<ModelTablicy>(context, listen: false)
           .notatkiL[newListIndex]
@@ -173,8 +171,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
       final movedListN = Provider.of<ModelTablicy>(context, listen: false)
           .notatkiL
           .removeAt(oldListIndex);
-      debugPrint(movedKolumn.id.toString());
-      debugPrint(newListIndex.toString());
       lists.insert(newListIndex, movedList);
       Provider.of<ModelTablicy>(context, listen: false)
           .kolumny
@@ -186,7 +182,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   }
 
   onItemAdd(DragAndDropItem newItem, int listIndex, int itemIndex) {
-    debugPrint('Dodawanie nowej notatki');
     setState(() {
       if (itemIndex == -1) {
         openAddNotatkaDialog(itemIndex, listIndex);
@@ -197,7 +192,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
   }
 
   onListAdd(DragAndDropListInterface newList, int listIndex) {
-    debugPrint('Dodawanie nowej kolumny');
     setState(() {
       if (listIndex == -1) {
         openAddKolumnaDialog(listIndex);
@@ -280,7 +274,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
             },
             fullscreenDialog: true));
     if (zmiana != null) {
-      debugPrint('zmiana');
       await Provider.of<ModelTablicy>(context, listen: false)
           .edytujTablice(zmiana, context);
     }
@@ -323,8 +316,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
             },
             fullscreenDialog: true));
     if (zmiana != null) {
-      debugPrint('zmiana');
-      debugPrint(zmiana.id.toString());
       await Provider.of<ModelTablicy>(context, listen: false)
           .edytujNotatka(zmiana, context);
     }
@@ -344,8 +335,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
             },
             fullscreenDialog: true));
     if (zmiana != null) {
-      debugPrint('zmiana');
-      debugPrint(zmiana.tytul.toString());
       await Provider.of<ModelTablicy>(context, listen: false)
           .edytujKolumna(zmiana, context);
     }
@@ -375,7 +364,6 @@ class _StanWidokuTablicy extends State<WidokTablicy> {
       } else {
         save.tablica =
             Provider.of<ModelTablicy>(context, listen: false).tablica.id!;
-        debugPrint(indexKolumna.toString());
         Provider.of<ModelTablicy>(context, listen: false)
             .notatkiL
             .insert(indexKolumna, []);
@@ -458,9 +446,6 @@ class AddEditNotatkaState extends State<AddEditNotatka> {
               note.czyZrobione = isCheckedC;
               note.dataRozpoczecia = _dateTimeStart;
               note.dataZakonczenia = _dateTimeEnd;
-              //debugPrint(tab.tytul);
-              // debugPrint(tab.czyZautomatyzowane.toString());
-              //  debugPrint(tab.id.toString());
               Navigator.of(context).pop(note);
             }
           },
@@ -620,9 +605,6 @@ class AddEditKolumnaState extends State<AddEditKolumna> {
         TextButton(
           onPressed: () {
             if (_kluczFormularza.currentState!.validate()) {
-              //debugPrint(tab.tytul);
-              // debugPrint(tab.czyZautomatyzowane.toString());
-              //  debugPrint(tab.id.toString());
               Navigator.of(context).pop(kolumna);
             }
           },

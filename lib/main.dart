@@ -38,7 +38,7 @@ class TimeHub extends StatelessWidget {
     ]);
 
     return MaterialApp(
-      
+      debugShowCheckedModeBanner: false,
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,

@@ -33,10 +33,8 @@ class _StanListyTablic extends State<ListaTablic> {
         children: List.generate(
             Provider.of<ModelTablicy>(context, listen: false).tablice.length,
             (index) {
-          debugPrint('tablice wygenerowane');
           return InkWell(
             onTap: () async {
-              debugPrint("Tablica $index pressed");
               await Provider.of<ModelTablicy>(context, listen: false)
                   .getKolumny(context, index);
               await Provider.of<ModelTablicy>(context, listen: false)
@@ -145,9 +143,6 @@ class AddEntryDialogState extends State<AddEntryDialog> {
           onPressed: () {
             if (_kluczFormularza.currentState!.validate()) {
               tab.czyZautomatyzowane = isChecked;
-              debugPrint(tab.tytul);
-              debugPrint(tab.czyZautomatyzowane.toString());
-              debugPrint(tab.id.toString());
               Navigator.of(context).pop(tab);
             }
           },

@@ -60,12 +60,10 @@ class ModelTablicy extends ChangeNotifier {
           json.decode(odpowiedz.body)['tytul'],
           json.decode(odpowiedz.body)['czy_zautomatyzowane']);
       tablice.add(tablica);
-      debugPrint(odpowiedz.body);
-      debugPrint('tablica dodana');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      print(odpowiedz.body);
+
     }
   }
 
@@ -93,7 +91,6 @@ class ModelTablicy extends ChangeNotifier {
           Provider.of<ModelTablicy>(context, listen: false)
               .tablice[index]
               .czyZautomatyzowane);
-      debugPrint('wczytano kolumny');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -118,7 +115,6 @@ class ModelTablicy extends ChangeNotifier {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       int _index = tablice.indexWhere((tab) => tab.id == tablica.id);
-      debugPrint(_index.toString());
 
       tablice.removeAt(_index);
       tablica = Tablica.utworz(
@@ -126,11 +122,9 @@ class ModelTablicy extends ChangeNotifier {
           json.decode(odpowiedz.body)['tytul'],
           json.decode(odpowiedz.body)['czy_zautomatyzowane']);
       tablice.insert(_index, tablica);
-      debugPrint('Tablica edytowana');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      debugPrint(odpowiedz.body);
     }
   }
 
@@ -146,11 +140,9 @@ class ModelTablicy extends ChangeNotifier {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       tablice.remove(tablica);
-      debugPrint('Tablica usunieta');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      debugPrint(odpowiedz.body);
     }
   }
 
@@ -174,8 +166,6 @@ class ModelTablicy extends ChangeNotifier {
             .toList();
         notatkiL.add(notatki);
       }
-      // debugPrint(notatkiL[0][0].id.toString());
-      debugPrint('wczytano notatki');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -198,8 +188,6 @@ class ModelTablicy extends ChangeNotifier {
     if (odpowiedz.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      debugPrint(nowaKolumna.toString());
-      debugPrint('Edytowano notatke');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -228,11 +216,9 @@ class ModelTablicy extends ChangeNotifier {
       // then parse the JSON.
       notatkiL[indexKolumna][indexNotatka].id =
           json.decode(odpowiedz.body)['id'];
-      debugPrint('Dodano notatke');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      debugPrint(odpowiedz.body);
       bledy = 'Blad podczas edycji notateki!';
     }
   }
@@ -252,13 +238,10 @@ class ModelTablicy extends ChangeNotifier {
     if (odpowiedz.statusCode == 201) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      debugPrint(odpowiedz.body);
       kolumny[indexKolumna].id = json.decode(odpowiedz.body)['id'];
-      debugPrint('Dodano kolumna');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      debugPrint(odpowiedz.body);
       bledy = 'Blad podczas edycji notateki!';
     }
   }
@@ -277,11 +260,9 @@ class ModelTablicy extends ChangeNotifier {
       int indexKol =
           kolumny.indexWhere((element) => element.id == note.kolumna);
       notatkiL[indexKol].remove(note);
-      debugPrint('Notatka usunieta');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      debugPrint(odpowiedz.body);
     }
   }
 
@@ -305,16 +286,13 @@ class ModelTablicy extends ChangeNotifier {
       // then parse the JSON.
       int _indexKol =
           kolumny.indexWhere((element) => element.id == zmiana.kolumna);
-      debugPrint(_indexKol.toString());
       int _indexNot =
           notatkiL[_indexKol].indexWhere((element) => element.id == zmiana.id);
       notatkiL[_indexKol].removeAt(_indexNot);
       notatkiL[_indexKol].insert(_indexNot, zmiana);
-      debugPrint('Notatka edytowana');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      //  debugPrint(odpowiedz.body);
     }
   }
 
@@ -333,13 +311,10 @@ class ModelTablicy extends ChangeNotifier {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       int _indexKol = kolumny.indexWhere((element) => element.id == zmiana.id);
-      debugPrint(_indexKol.toString());
       kolumny[_indexKol].tytul = zmiana.tytul;
-      debugPrint('Kolumna edytowana');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      //  debugPrint(odpowiedz.body);
     }
   }
 
@@ -357,11 +332,9 @@ class ModelTablicy extends ChangeNotifier {
       int indexKol = kolumny.indexOf(kolumna);
       notatkiL.removeAt(indexKol);
       kolumny.remove(kolumna);
-      debugPrint('Notatka usunieta');
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
-      debugPrint(odpowiedz.body);
     }
   }
 }

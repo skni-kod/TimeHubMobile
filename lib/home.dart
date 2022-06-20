@@ -128,15 +128,9 @@ class UzytkownikZalogowany {
                               Provider.of<ModelTablicy>(context, listen: false)
                                   .tablice
                                   .length;
-                          i++) {
-                        print((Provider.of<ModelTablicy>(context, listen: false)
-                            .tablice[i]
-                            .tytul));
-                      }
+                          i++) {}
                       Navigator.pushNamed(context, "/listaTablic");
-                    } else {
-                      print("error");
-                    }
+                    } else {}
                   },
                 ),
               ),

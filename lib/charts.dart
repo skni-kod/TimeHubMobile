@@ -226,7 +226,7 @@ class _stanWykresow extends State<Wykresy> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white),
-                                      titlePositionPercentageOffset: 0,
+                                      //  titlePositionPercentageOffset: 0.5,
                                     ),
                                     PieChartSectionData(
                                       color: Colors.orange,
@@ -239,7 +239,7 @@ class _stanWykresow extends State<Wykresy> {
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white),
-                                      titlePositionPercentageOffset: 0,
+                                      //  titlePositionPercentageOffset: 0.5,
                                     )
                                   ]))),
                         ],
