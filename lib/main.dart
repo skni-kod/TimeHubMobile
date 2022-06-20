@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:timehubmobile/Store/kolumnaModel.dart';
 import 'package:timehubmobile/Store/tablicaModel.dart';
 import 'package:timehubmobile/Store/wykresModel.dart';
 import 'package:timehubmobile/calendar.dart';
@@ -13,6 +12,7 @@ import 'package:timehubmobile/Store/notatkaModel.dart';
 import 'package:timehubmobile/Store/userModel.dart';
 import 'package:flutter/services.dart';
 import 'package:timehubmobile/charts.dart';
+import "package:flutter_localizations/flutter_localizations.dart";
 
 void main() {
   runApp(MultiProvider(
@@ -38,6 +38,13 @@ class TimeHub extends StatelessWidget {
     ]);
 
     return MaterialApp(
+      
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [const Locale('en'), const Locale('pl')],
       title: 'TimeHub',
       theme: ThemeData(
         primarySwatch: Colors.blue,

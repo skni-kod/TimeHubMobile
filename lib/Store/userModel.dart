@@ -12,7 +12,7 @@ class ModelUzytkownika extends ChangeNotifier {
 
   Future login(nazwa, haslo) async {
     final odpowiedz = await http.post(
-        Uri.parse('http://10.0.2.2:8000/dj_rest_auth/login/'),
+        Uri.parse('https://projekt-timehub.herokuapp.com/dj_rest_auth/login/'),
         body: {'username': nazwa, 'password': haslo});
     if (odpowiedz.statusCode == 200) {
       // If the server did return a 200 OK response,
@@ -27,7 +27,8 @@ class ModelUzytkownika extends ChangeNotifier {
 
   Future register(nazwa, email, haslo, powtHaslo) async {
     final odpowiedz = await http.post(
-        Uri.parse('http://10.0.2.2:8000/dj_rest_auth/registration/'),
+        Uri.parse(
+            'https://projekt-timehub.herokuapp.com/dj_rest_auth/registration/'),
         body: {
           'username': nazwa,
           'password1': haslo,
