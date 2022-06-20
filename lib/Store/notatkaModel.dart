@@ -12,7 +12,8 @@ class ModelNotatek extends ChangeNotifier {
   Future pobierz(BuildContext context, String miesiac, String rok) async {
     _notatki = [];
     final odpowiedz = await http.post(
-        Uri.parse('http://10.0.2.2:8000/api/uzytkownikNotatkiMiesiacRok/'),
+        Uri.parse(
+            'https://projekt-timehub.herokuapp.com/api/uzytkownikNotatkiMiesiacRok/'),
         headers: {
           "Authorization": 'Bearer ' +
               Provider.of<ModelUzytkownika>(context, listen: false).token,

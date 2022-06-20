@@ -96,16 +96,19 @@ class _stanWykresow extends State<Wykresy> {
     List<Container> indykatoryProcentNaTablice(List<String> nazwy) {
       return List.generate(nazwy.length < 4 ? nazwy.length : 4, (i) {
         return Container(
+            padding: EdgeInsets.only(top: 10),
             child: Row(
-          children: [
-            Icon(
-              Icons.square,
-              color: kolory[i],
-              size: 20,
-            ),
-            Text(nazwy[i])
-          ],
-        ));
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.square,
+                  color: kolory[i],
+                  size: 20,
+                ),
+                Text(nazwy[i])
+              ],
+            ));
       });
     }
 
@@ -129,18 +132,21 @@ class _stanWykresow extends State<Wykresy> {
     }
 
     WykresAktualne aktualne =
-        Provider.of<ModelWykresu>(context, listen: false).aktualne;
-    double lacznieWykresAktualne = 0;
-    Provider.of<ModelWykresu>(context, listen: false)
+        Provider.of<ModelWykresu>(context, listen: true).aktualne;
+    double lacznieWykresAktualne = 0.0;
+    Provider.of<ModelWykresu>(context, listen: true)
         .wykresAktywneZadania(context);
-    Provider.of<ModelWykresu>(context, listen: false)
+    Provider.of<ModelWykresu>(context, listen: true)
         .wykresProcentNaTablice(context);
-    var bledy = Provider.of<ModelWykresu>(context, listen: false).bledy;
+    bool bledy = Provider.of<ModelWykresu>(context, listen: true).bledy;
+    bool pusto = false;
 
     if (!bledy) {
-      aktualne = Provider.of<ModelWykresu>(context, listen: false).aktualne;
-      lacznieWykresAktualne = double.parse(aktualne.zrobione.toString()) +
-          double.parse(aktualne.w_trakcie.toString());
+      aktualne = Provider.of<ModelWykresu>(context, listen: true).aktualne;
+      lacznieWykresAktualne = aktualne.zrobione + aktualne.w_trakcie;
+      if (lacznieWykresAktualne == 0) {
+        pusto = true;
+      }
     }
     return Scaffold(
         appBar: AppBar(
@@ -148,121 +154,127 @@ class _stanWykresow extends State<Wykresy> {
         ),
         body: bledy
             ? const Text('Wystąpił błąd. Spróbuj ponownie później')
-            : ListView(
-                shrinkWrap: true,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 50),
-                physics: const ClampingScrollPhysics(),
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+            : pusto
+                ? const Text('Nie masz żadnych wykresów do wyświetlenia')
+                : ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 50),
+                    physics: const ClampingScrollPhysics(),
                     children: [
-                      const Text(
-                        'Aktualne zadania',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.square,
-                                    color: Colors.blue,
-                                    size: 20,
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Aktualne zadania',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: const [
+                                      Icon(
+                                        Icons.square,
+                                        color: Colors.blue,
+                                        size: 20,
+                                      ),
+                                      Text('Zadania wykonane')
+                                    ],
                                   ),
-                                  Text('Zadania wykonane')
-                                ],
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                children: const [
-                                  Icon(
-                                    Icons.square,
-                                    color: Colors.orange,
-                                    size: 20,
-                                  ),
-                                  Text('Zadania bierzące')
-                                ],
-                              ),
-                            ),
-                          ]),
-                      Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width / 2 - 40,
-                          child: PieChart(PieChartData(
-                              pieTouchData: PieTouchData(
-                                  touchCallback:
-                                      (FlTouchEvent, PieTouchResponse) => {}),
-                              startDegreeOffset: 180,
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 1,
-                              centerSpaceRadius: 0,
-                              sections: [
-                                PieChartSectionData(
-                                  color: Colors.blue,
-                                  value: aktualne.zrobione /
-                                      lacznieWykresAktualne *
-                                      100,
-                                  title: aktualne.zrobione.toString(),
-                                  radius: 70,
-                                  titleStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  titlePositionPercentageOffset: 0,
                                 ),
-                                PieChartSectionData(
-                                  color: Colors.orange,
-                                  value: aktualne.w_trakcie /
-                                      lacznieWykresAktualne *
-                                      100,
-                                  title: aktualne.w_trakcie.toString(),
-                                  radius: 70,
-                                  titleStyle: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white),
-                                  titlePositionPercentageOffset: 0,
-                                )
-                              ]))),
-                    ],
-                  ),
-                  Column(
-                    children: [
-                      const Text(
-                        'Podział zadań na tablice',
-                        style: TextStyle(fontSize: 16),
+                                Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: const [
+                                      Icon(
+                                        Icons.square,
+                                        color: Colors.orange,
+                                        size: 20,
+                                      ),
+                                      Text('Zadania bierzące')
+                                    ],
+                                  ),
+                                ),
+                              ]),
+                          Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width / 2 - 40,
+                              child: PieChart(PieChartData(
+                                  pieTouchData: PieTouchData(
+                                      touchCallback:
+                                          (FlTouchEvent, PieTouchResponse) =>
+                                              {}),
+                                  startDegreeOffset: 180,
+                                  borderData: FlBorderData(
+                                    show: false,
+                                  ),
+                                  sectionsSpace: 1,
+                                  centerSpaceRadius: 0,
+                                  sections: [
+                                    PieChartSectionData(
+                                      color: Colors.blue,
+                                      value: aktualne.zrobione /
+                                          lacznieWykresAktualne *
+                                          100,
+                                      title: aktualne.zrobione.toString(),
+                                      radius: 70,
+                                      titleStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                      titlePositionPercentageOffset: 0,
+                                    ),
+                                    PieChartSectionData(
+                                      color: Colors.orange,
+                                      value: aktualne.w_trakcie /
+                                          lacznieWykresAktualne *
+                                          100,
+                                      title: aktualne.w_trakcie.toString(),
+                                      radius: 70,
+                                      titleStyle: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white),
+                                      titlePositionPercentageOffset: 0,
+                                    )
+                                  ]))),
+                        ],
                       ),
-                      const Text('Ostatnie 7 dni'),
-                      Wrap(
-                          children: indykatoryProcentNaTablice(
-                              Provider.of<ModelWykresu>(context, listen: false)
-                                  .nazwyTablic)),
-                      Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width / 2 - 40,
-                          child: PieChart(PieChartData(
-                              startDegreeOffset: 180,
-                              borderData: FlBorderData(
-                                show: false,
-                              ),
-                              sectionsSpace: 1,
-                              centerSpaceRadius: 0,
-                              sections: procentNaTabliceSekcje(
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            'Podział zadań na tablice',
+                            style: TextStyle(fontSize: 16),
+                          ),
+                          const Text('Ostatnie 7 dni'),
+                          Wrap(
+                              children: indykatoryProcentNaTablice(
                                   Provider.of<ModelWykresu>(context,
                                           listen: false)
-                                      .procentNaTablice)))),
-                    ],
-                  ),
-                  /*Row(
+                                      .nazwyTablic)),
+                          Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width / 2 - 40,
+                              child: PieChart(PieChartData(
+                                  startDegreeOffset: 180,
+                                  borderData: FlBorderData(
+                                    show: false,
+                                  ),
+                                  sectionsSpace: 1,
+                                  centerSpaceRadius: 0,
+                                  sections: procentNaTabliceSekcje(
+                                      Provider.of<ModelWykresu>(context,
+                                              listen: false)
+                                          .procentNaTablice)))),
+                        ],
+                      ),
+                      /*Row(
                     children: [
                       Column(children: [
                         const Text(
@@ -304,7 +316,7 @@ class _stanWykresow extends State<Wykresy> {
                       ])
                     ],
                   )*/
-                ],
-              ));
+                    ],
+                  ));
   }
 }
