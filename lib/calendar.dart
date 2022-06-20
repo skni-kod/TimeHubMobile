@@ -101,13 +101,6 @@ class _stanKalendarza extends State<Calendar> {
                                                     miesiac = 12;
                                                     rok--;
                                                   }
-                                                  Provider.of<ModelNotatek>(
-                                                          context,
-                                                          listen: false)
-                                                      .pobierz(
-                                                          context,
-                                                          miesiac.toString(),
-                                                          rok.toString());
                                                   pobierzNotatki();
                                                 })),
                                             child: const Icon(
@@ -130,13 +123,6 @@ class _stanKalendarza extends State<Calendar> {
                                                     miesiac = 1;
                                                     rok++;
                                                   }
-                                                  Provider.of<ModelNotatek>(
-                                                          context,
-                                                          listen: false)
-                                                      .pobierz(
-                                                          context,
-                                                          miesiac.toString(),
-                                                          rok.toString());
                                                   pobierzNotatki();
                                                 })),
                                             child: const Icon(
