@@ -7,7 +7,6 @@ import 'package:timehubmobile/Store/userModel.dart';
 class ModelNotatek extends ChangeNotifier {
   List<Notatka> _notatki = [];
   List<Notatka> notatkiZDnia = [];
-  bool _pobrano = false;
   String bledy = "";
   Future pobierz(BuildContext context, String miesiac, String rok) async {
     _notatki = [];
@@ -25,10 +24,10 @@ class ModelNotatek extends ChangeNotifier {
     if (odpowiedz.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      _pobrano = true;
       for (var notatka in jsonDecode(odpowiedz.body)) {
         _notatki.add(Notatka.stworz(notatka['notatka']));
       }
+      (context as Element).reassemble();
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -38,9 +37,7 @@ class ModelNotatek extends ChangeNotifier {
 
   Future filtrujNotatki(
       BuildContext context, String miesiac, String rok, int dzien) async {
-    if (!_pobrano) {
-      await pobierz(context, miesiac, rok);
-    }
+    await pobierz(context, miesiac, rok);
     notatkiZDnia = [];
     DateTime wybranyDzien = DateTime.parse(rok +
         '-' +

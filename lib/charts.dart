@@ -249,7 +249,7 @@ class _stanWykresow extends State<Wykresy> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const Text(
-                            'Podział zadań na tablice',
+                            'Podział zadań na tablice [%]',
                             style: TextStyle(fontSize: 16),
                           ),
                           const Text('Ostatnie 7 dni'),

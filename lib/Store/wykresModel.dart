@@ -21,6 +21,7 @@ class ModelWykresu extends ChangeNotifier {
         });
     if (odpowiedz.statusCode == 200) {
       aktualne = WykresAktualne.utworz(json.decode(odpowiedz.body));
+      (context as Element).reassemble();
     } else {
       _bledy = "Cos poszło nie tak";
     }
@@ -36,6 +37,7 @@ class ModelWykresu extends ChangeNotifier {
         });
     if (odpowiedz.statusCode == 200) {
       procentNaTablice = json.decode(odpowiedz.body);
+      (context as Element).reassemble();
     } else {
       _bledy = "Cos poszło nie tak";
     }
